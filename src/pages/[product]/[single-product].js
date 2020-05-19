@@ -184,7 +184,7 @@ function SingleProduct({ product }) {
             </div>
             {console.log("sss", selectedProduct.variation_gallery_images)}
             {/* {
-/
+//
                 selectedProduct == {} ? "null" : selectedProduct.variation_gallery_images.map((product, index) => {
                     return <img
                         src={product.url}
