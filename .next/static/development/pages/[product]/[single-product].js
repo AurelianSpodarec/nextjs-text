@@ -34702,6 +34702,13 @@ __webpack_require__.r(__webpack_exports__);
 var _jsxFileName = "/Users/Dorota/Desktop/WebDev/nextjs-wp-test/front-end/src/pages/[product]/[single-product].js";
 var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
 
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+
 
 
 
@@ -34801,52 +34808,100 @@ function SingleProduct(_ref2) {
     if (!selectedColor) {
       setSelectedColor(product.variations[0].attributes.attribute_pa_color);
       var obj = [];
-      product.variations.map(function (object, index) {
-        if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
-          obj.push(object.attributes.attribute_pa_size);
-        }
 
-        setSizes(obj);
-      });
+      var _iterator = _createForOfIteratorHelper(product.variations),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var variation = _step.value;
+
+          if (variation.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+            obj.push(variation.attributes.attribute_pa_size);
+          }
+
+          setSizes(obj);
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
     }
   }
 
   function setUniqueColors() {
-    var colorArr = [];
-    product.variations.map(function (object, index) {
-      if (!colorArr.includes(object.attributes.attribute_pa_color)) {
-        colorArr.push(object.attributes.attribute_pa_color);
-      }
+    var colorSet = new Set([]);
 
-      setColors(colorArr);
-    });
+    var _iterator2 = _createForOfIteratorHelper(product.variations),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var variation = _step2.value;
+
+        if (variation.attributes.attribute_pa_color) {
+          colorSet.add(variation.attributes.attribute_pa_color);
+        }
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+
+    setColors(Array.from(colorSet));
   }
 
   function getProduct(color, size) {
-    product.variations.map(function (object, index) {
-      if (!selectedSize) {
-        if (object.attributes.attribute_pa_color === selectedColor) {
-          setSelectedProduct(object);
-        }
-      } else {
-        if (object.attributes.attribute_pa_color === selectedColor && object.attributes.attribute_pa_size === selectedSize) {
-          setSelectedProduct(object);
+    var _iterator3 = _createForOfIteratorHelper(product.variations),
+        _step3;
+
+    try {
+      for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
+        var variation = _step3.value;
+
+        if (!selectedSize) {
+          if (variation.attributes.attribute_pa_color === selectedColor) {
+            setSelectedProduct(variation);
+          }
+        } else {
+          if (variation.attributes.attribute_pa_color === selectedColor && variation.attributes.attribute_pa_size === selectedSize) {
+            setSelectedProduct(variation);
+          }
         }
       }
-    });
+    } catch (err) {
+      _iterator3.e(err);
+    } finally {
+      _iterator3.f();
+    }
   }
 
   console.log('Color, size', selectedColor, selectedSize);
 
   function getSizes() {
     var obj = [];
-    product.variations.map(function (object, index) {
-      if (object.attributes.attribute_pa_color === selectedColor) {
-        obj.push(object.attributes.attribute_pa_size);
-      }
 
-      setSizes(obj);
-    });
+    var _iterator4 = _createForOfIteratorHelper(product.variations),
+        _step4;
+
+    try {
+      for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+        var variation = _step4.value;
+
+        if (variation.attributes.attribute_pa_color === selectedColor) {
+          obj.push(variation.attributes.attribute_pa_size);
+        }
+      } // only need to call this once
+
+    } catch (err) {
+      _iterator4.e(err);
+    } finally {
+      _iterator4.f();
+    }
+
+    setSizes(obj);
   }
 
   function changeColor(color) {
@@ -34868,42 +34923,42 @@ function SingleProduct(_ref2) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 156,
+      lineNumber: 160,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 157,
+      lineNumber: 161,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 158,
+      lineNumber: 162,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 160,
+      lineNumber: 164,
       columnNumber: 17
     }
   }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 161,
+      lineNumber: 165,
       columnNumber: 17
     }
   }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 163,
+      lineNumber: 167,
       columnNumber: 17
     }
   }, colors.map(function (object, index) {
@@ -34921,7 +34976,7 @@ function SingleProduct(_ref2) {
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 166,
+        lineNumber: 170,
         columnNumber: 29
       }
     });
@@ -34930,7 +34985,7 @@ function SingleProduct(_ref2) {
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 172,
+        lineNumber: 176,
         columnNumber: 29
       }
     }, __jsx("div", {
@@ -34945,7 +35000,7 @@ function SingleProduct(_ref2) {
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 173,
+        lineNumber: 177,
         columnNumber: 33
       }
     }, object));
@@ -34958,7 +35013,7 @@ function SingleProduct(_ref2) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 183,
+      lineNumber: 187,
       columnNumber: 17
     }
   }, "Add to cart")), console.log("sss", selectedProduct.variation_gallery_images));

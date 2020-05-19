@@ -85,53 +85,57 @@ function SingleProduct({ product }) {
             setSelectedColor(product.variations[0].attributes.attribute_pa_color)
 
             let obj = [];
-            product.variations.map((object, index) => {
-                if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
-                    obj.push(object.attributes.attribute_pa_size)
+            for (const variation of product.variations) {
+                if (variation.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+                    obj.push(variation.attributes.attribute_pa_size)
                 }
                 setSizes(obj)
-            })
+            }
+
         }
 
     }
 
     function setUniqueColors() {
-        let colorArr = [];
-        product.variations.map((object, index) => {
-            if (!colorArr.includes(object.attributes.attribute_pa_color)) {
-                colorArr.push(object.attributes.attribute_pa_color)
+        let colorSet = new Set([]);
+
+        for (const variation of product.variations) {
+            if (variation.attributes.attribute_pa_color) {
+                colorSet.add(variation.attributes.attribute_pa_color);
             }
-            setColors(colorArr)
-        })
+        }
+
+        setColors(Array.from(colorSet));
     }
 
     function getProduct(color, size) {
 
-        product.variations.map((object, index) => {
+        for (const variation of product.variations) {
             if (!selectedSize) {
-                if (object.attributes.attribute_pa_color === selectedColor) {
-                    setSelectedProduct(object)
+                if (variation.attributes.attribute_pa_color === selectedColor) {
+                    setSelectedProduct(variation)
                 }
             } else {
-                if (object.attributes.attribute_pa_color === selectedColor &&
-                    object.attributes.attribute_pa_size === selectedSize) {
-                    setSelectedProduct(object)
+                if (variation.attributes.attribute_pa_color === selectedColor &&
+                    variation.attributes.attribute_pa_size === selectedSize) {
+                    setSelectedProduct(variation)
                 }
             }
 
-        })
+        }
     }
 
     console.log('Color, size', selectedColor, selectedSize)
 
     function getSizes() {
         let obj = [];
-        product.variations.map((object, index) => {
-            if (object.attributes.attribute_pa_color === selectedColor) {
-                obj.push(object.attributes.attribute_pa_size)
+        for (const variation of product.variations) {
+            if (variation.attributes.attribute_pa_color === selectedColor) {
+                obj.push(variation.attributes.attribute_pa_size)
             }
-            setSizes(obj)
-        })
+        }
+        // only need to call this once
+        setSizes(obj)
     }
 
     function changeColor(color) {
@@ -184,7 +188,7 @@ function SingleProduct({ product }) {
             </div>
             {console.log("sss", selectedProduct.variation_gallery_images)}
             {/* {
-//
+
                 selectedProduct == {} ? "null" : selectedProduct.variation_gallery_images.map((product, index) => {
                     return <img
                         src={product.url}

@@ -1925,52 +1925,56 @@ function SingleProduct({
     if (!selectedColor) {
       setSelectedColor(product.variations[0].attributes.attribute_pa_color);
       let obj = [];
-      product.variations.map((object, index) => {
-        if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
-          obj.push(object.attributes.attribute_pa_size);
+
+      for (const variation of product.variations) {
+        if (variation.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+          obj.push(variation.attributes.attribute_pa_size);
         }
 
         setSizes(obj);
-      });
+      }
     }
   }
 
   function setUniqueColors() {
-    let colorArr = [];
-    product.variations.map((object, index) => {
-      if (!colorArr.includes(object.attributes.attribute_pa_color)) {
-        colorArr.push(object.attributes.attribute_pa_color);
-      }
+    let colorSet = new Set([]);
 
-      setColors(colorArr);
-    });
+    for (const variation of product.variations) {
+      if (variation.attributes.attribute_pa_color) {
+        colorSet.add(variation.attributes.attribute_pa_color);
+      }
+    }
+
+    setColors(Array.from(colorSet));
   }
 
   function getProduct(color, size) {
-    product.variations.map((object, index) => {
+    for (const variation of product.variations) {
       if (!selectedSize) {
-        if (object.attributes.attribute_pa_color === selectedColor) {
-          setSelectedProduct(object);
+        if (variation.attributes.attribute_pa_color === selectedColor) {
+          setSelectedProduct(variation);
         }
       } else {
-        if (object.attributes.attribute_pa_color === selectedColor && object.attributes.attribute_pa_size === selectedSize) {
-          setSelectedProduct(object);
+        if (variation.attributes.attribute_pa_color === selectedColor && variation.attributes.attribute_pa_size === selectedSize) {
+          setSelectedProduct(variation);
         }
       }
-    });
+    }
   }
 
   console.log('Color, size', selectedColor, selectedSize);
 
   function getSizes() {
     let obj = [];
-    product.variations.map((object, index) => {
-      if (object.attributes.attribute_pa_color === selectedColor) {
-        obj.push(object.attributes.attribute_pa_size);
-      }
 
-      setSizes(obj);
-    });
+    for (const variation of product.variations) {
+      if (variation.attributes.attribute_pa_color === selectedColor) {
+        obj.push(variation.attributes.attribute_pa_size);
+      }
+    } // only need to call this once
+
+
+    setSizes(obj);
   }
 
   function changeColor(color) {
@@ -1992,42 +1996,42 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 156,
+      lineNumber: 160,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 157,
+      lineNumber: 161,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 158,
+      lineNumber: 162,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 160,
+      lineNumber: 164,
       columnNumber: 17
     }
   }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 161,
+      lineNumber: 165,
       columnNumber: 17
     }
   }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 163,
+      lineNumber: 167,
       columnNumber: 17
     }
   }, colors.map((object, index) => __jsx("button", {
@@ -2042,14 +2046,14 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 166,
+      lineNumber: 170,
       columnNumber: 29
     }
   })), sizes.map((object, index) => __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 172,
+      lineNumber: 176,
       columnNumber: 29
     }
   }, __jsx("div", {
@@ -2062,7 +2066,7 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 173,
+      lineNumber: 177,
       columnNumber: 33
     }
   }, object)))), __jsx("button", {
@@ -2074,7 +2078,7 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 183,
+      lineNumber: 187,
       columnNumber: 17
     }
   }, "Add to cart")), console.log("sss", selectedProduct.variation_gallery_images));
