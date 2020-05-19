@@ -16936,7 +16936,7 @@ function _isUint8Array(obj) {
 /*<replacement>*/
 
 
-var debugUtil = __webpack_require__(/*! util */ 5);
+var debugUtil = __webpack_require__(/*! util */ 4);
 
 var debug;
 
@@ -19170,7 +19170,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var _require = __webpack_require__(/*! buffer */ "./node_modules/buffer/index.js"),
     Buffer = _require.Buffer;
 
-var _require2 = __webpack_require__(/*! util */ 6),
+var _require2 = __webpack_require__(/*! util */ 5),
     inspect = _require2.inspect;
 
 var custom = inspect && inspect.custom || 'inspect';
@@ -29550,7 +29550,7 @@ util.inherits = __webpack_require__(/*! inherits */ "./node_modules/readable-str
 /*</replacement>*/
 
 /*<replacement>*/
-var debugUtil = __webpack_require__(/*! util */ 3);
+var debugUtil = __webpack_require__(/*! util */ 2);
 var debug = void 0;
 if (debugUtil && debugUtil.debuglog) {
   debug = debugUtil.debuglog('stream');
@@ -31439,7 +31439,7 @@ Writable.prototype._destroy = function (err, cb) {
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Buffer = __webpack_require__(/*! safe-buffer */ "./node_modules/safe-buffer/index.js").Buffer;
-var util = __webpack_require__(/*! util */ 4);
+var util = __webpack_require__(/*! util */ 3);
 
 function copyBuffer(src, target, offset) {
   src.copy(target, offset);
@@ -34758,6 +34758,8 @@ function getColors(variation) {
 //             "attribute_pa_size": "xl"
 //             },
 // Loop buttons, if color already exists, loop it once
+// Go get the first product, set it as color, get its size - since the prodict colros and sizes and unknown
+// Maybe set sizes and map them to a new array map
 
 
 function SingleProduct(_ref2) {
@@ -34791,6 +34793,24 @@ function SingleProduct(_ref2) {
       selectedSize = _useState6[0],
       setSelectedSize = _useState6[1];
 
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+      selectedProduct = _useState7[0],
+      setSelectedProduct = _useState7[1];
+
+  function setInitialValues() {
+    if (!selectedColor) {
+      setSelectedColor(product.variations[0].attributes.attribute_pa_color);
+      var obj = [];
+      product.variations.map(function (object, index) {
+        if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+          obj.push(object.attributes.attribute_pa_size);
+        }
+
+        setSizes(obj);
+      });
+    }
+  }
+
   function setUniqueColors() {
     var colorArr = [];
     product.variations.map(function (object, index) {
@@ -34802,12 +34822,25 @@ function SingleProduct(_ref2) {
     });
   }
 
+  function getProduct(color, size) {
+    product.variations.map(function (object, index) {
+      if (!selectedSize) {
+        if (object.attributes.attribute_pa_color === selectedColor) {
+          setSelectedProduct(object);
+        }
+      } else {
+        if (object.attributes.attribute_pa_color === selectedColor && object.attributes.attribute_pa_size === selectedSize) {
+          setSelectedProduct(object);
+        }
+      }
+    });
+  }
+
+  console.log('Color, size', selectedColor, selectedSize);
+
   function getSizes() {
     var obj = [];
-    console.log("size", obj);
     product.variations.map(function (object, index) {
-      console.log(object.attributes.attribute_pa_color === selectedColor);
-
       if (object.attributes.attribute_pa_color === selectedColor) {
         obj.push(object.attributes.attribute_pa_size);
       }
@@ -34816,53 +34849,61 @@ function SingleProduct(_ref2) {
     });
   }
 
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(function () {
-    setUniqueColors();
-  }, []);
-
-  function changeColor(_ref3) {
-    var object = _ref3.object,
-        index = _ref3.index;
-    // console.log("changcol", object, index)
-    setSelectedColor(object); // setProductIndex(index ? index : 0)
-
-    getSizes();
+  function changeColor(color) {
+    setSelectedColor(color);
   }
 
-  console.log("RERE", selectedColor, selectedSize);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    getSizes();
+    getProduct();
+  }, [selectedColor, selectedSize]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    setSelectedSize(null);
+  }, [selectedColor]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    setUniqueColors();
+    setInitialValues();
+  }, []);
   return __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 116,
+      lineNumber: 156,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 117,
+      lineNumber: 157,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 118,
+      lineNumber: 158,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 120,
+      lineNumber: 160,
       columnNumber: 17
     }
-  }, "Price: ", product.variations[productIndex].display_regular_price), __jsx("div", {
+  }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 123,
+      lineNumber: 161,
+      columnNumber: 17
+    }
+  }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
+    __self: this,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 163,
       columnNumber: 17
     }
   }, colors.map(function (object, index) {
@@ -34872,7 +34913,7 @@ function SingleProduct(_ref2) {
       },
       key: index,
       style: {
-        border: index === productIndex ? '3px solid red' : '',
+        border: selectedColor === object ? '3px solid red' : '',
         height: '50px',
         width: '50px',
         backgroundColor: "".concat(object)
@@ -34880,7 +34921,7 @@ function SingleProduct(_ref2) {
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 126,
+        lineNumber: 166,
         columnNumber: 29
       }
     });
@@ -34889,22 +34930,22 @@ function SingleProduct(_ref2) {
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 132,
+        lineNumber: 172,
         columnNumber: 29
       }
-    }, console.log("Sd", object), __jsx("div", {
+    }, __jsx("div", {
       onClick: function onClick() {
         return setSelectedSize(object);
       },
       style: {
         height: '50px',
         width: '50px',
-        border: '2px solid grey'
+        border: selectedSize === object ? '2px solid black' : "1px solid grey"
       },
       __self: _this2,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 134,
+        lineNumber: 173,
         columnNumber: 33
       }
     }, object));
@@ -34917,22 +34958,10 @@ function SingleProduct(_ref2) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 139,
+      lineNumber: 183,
       columnNumber: 17
     }
-  }, "Add to cart")), product.variations[productIndex].variation_gallery_images.map(function (product, index) {
-    return __jsx("img", {
-      src: product.url,
-      height: "300px",
-      title: "Contemplative Reptile",
-      __self: _this2,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 144,
-        columnNumber: 28
-      }
-    });
-  }));
+  }, "Add to cart")), console.log("sss", selectedProduct.variation_gallery_images));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
@@ -35004,6 +35033,17 @@ module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2F%5Bpro
 
 /***/ }),
 
+/***/ 2:
+/*!**********************!*\
+  !*** util (ignored) ***!
+  \**********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
 /***/ 3:
 /*!**********************!*\
   !*** util (ignored) ***!
@@ -35027,17 +35067,6 @@ module.exports = __webpack_require__(/*! next-client-pages-loader?page=%2F%5Bpro
 /***/ }),
 
 /***/ 5:
-/*!**********************!*\
-  !*** util (ignored) ***!
-  \**********************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* (ignored) */
-
-/***/ }),
-
-/***/ 6:
 /*!**********************!*\
   !*** util (ignored) ***!
   \**********************/

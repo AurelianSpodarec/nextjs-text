@@ -60,7 +60,9 @@ function getColors(variation) {
 
 // Loop buttons, if color already exists, loop it once
 
+// Go get the first product, set it as color, get its size - since the prodict colros and sizes and unknown
 
+// Maybe set sizes and map them to a new array map
 
 function SingleProduct({ product }) {
     const router = useRouter();
@@ -76,6 +78,23 @@ function SingleProduct({ product }) {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null)
 
+    const [selectedProduct, setSelectedProduct] = useState({})
+
+    function setInitialValues() {
+        if (!selectedColor) {
+            setSelectedColor(product.variations[0].attributes.attribute_pa_color)
+
+            let obj = [];
+            product.variations.map((object, index) => {
+                if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+                    obj.push(object.attributes.attribute_pa_size)
+                }
+                setSizes(obj)
+            })
+        }
+
+    }
+
     function setUniqueColors() {
         let colorArr = [];
         product.variations.map((object, index) => {
@@ -86,68 +105,94 @@ function SingleProduct({ product }) {
         })
     }
 
+    function getProduct(color, size) {
+
+        product.variations.map((object, index) => {
+            if (!selectedSize) {
+                if (object.attributes.attribute_pa_color === selectedColor) {
+                    setSelectedProduct(object)
+                }
+            } else {
+                if (object.attributes.attribute_pa_color === selectedColor &&
+                    object.attributes.attribute_pa_size === selectedSize) {
+                    setSelectedProduct(object)
+                }
+            }
+
+        })
+    }
+
+    console.log('Color, size', selectedColor, selectedSize)
+
     function getSizes() {
         let obj = [];
-        console.log("size", obj)
         product.variations.map((object, index) => {
-            console.log(object.attributes.attribute_pa_color === selectedColor)
             if (object.attributes.attribute_pa_color === selectedColor) {
                 obj.push(object.attributes.attribute_pa_size)
             }
-
             setSizes(obj)
         })
     }
 
-    useState(() => {
-        setUniqueColors()
-
-    }, [])
-
-    function changeColor({ object, index }) {
-        // console.log("changcol", object, index)
-        setSelectedColor(object)
-        // setProductIndex(index ? index : 0)
-        getSizes()
+    function changeColor(color) {
+        setSelectedColor(color)
     }
-    console.log("RERE", selectedColor, selectedSize)
+
+    useEffect(() => {
+        getSizes()
+        getProduct()
+    }, [selectedColor, selectedSize])
+
+    useEffect(() => {
+        setSelectedSize(null)
+    }, [selectedColor])
+
+    useEffect(() => {
+        setUniqueColors()
+        setInitialValues()
+    }, [])
 
     return (
         <div>
             <div>
                 <div>Name: {product.name}</div>
 
-                <div>Price: {product.variations[productIndex].display_regular_price}</div>
-                {/* <div>Sale Price: {product.variations[productIndex].display_price}</div> */}
+                <div>Price: {selectedProduct.display_regular_price}</div>
+                <div>Sale Price: {selectedProduct.display_price}</div>
 
                 <div>
                     {
                         colors.map((object, index) =>
-                            <button onClick={() => changeColor(object)} key={index} style={{ border: index === productIndex ? '3px solid red' : '', height: '50px', width: '50px', backgroundColor: `${object}` }}></button>
+                            <button onClick={() => changeColor(object)} key={index} style={{ border: selectedColor === object ? '3px solid red' : '', height: '50px', width: '50px', backgroundColor: `${object}` }}></button>
                         )
                     }
 
                     {
                         sizes.map((object, index) =>
                             <div>
-                                {console.log("Sd", object)}
-                                <div onClick={() => setSelectedSize(object)} style={{ height: '50px', width: '50px', border: '2px solid grey' }}>{object}</div>
+                                <div
+                                    onClick={() => setSelectedSize(object)}
+                                    style={{ height: '50px', width: '50px', border: selectedSize === object ? '2px solid black' : "1px solid grey" }}
+                                >
+                                    {object}
+                                </div>
                             </div>
                         )
                     }
                 </div>
                 <button style={{ margin: "20px 0", padding: '14px 14px', fontSize: '1em' }}>Add to cart</button>
             </div>
-
-            {
-                product.variations[productIndex].variation_gallery_images.map((product, index) => {
+            {console.log("sss", selectedProduct.variation_gallery_images)}
+            {/* {
+/
+                selectedProduct == {} ? "null" : selectedProduct.variation_gallery_images.map((product, index) => {
                     return <img
                         src={product.url}
                         height="300px"
                         title="Contemplative Reptile"
                     />
                 })
-            }
+            } */}
 
         </div>
     )

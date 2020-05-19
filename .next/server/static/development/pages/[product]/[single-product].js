@@ -88,7 +88,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -1883,6 +1883,8 @@ function getColors(variation) {
 //             "attribute_pa_size": "xl"
 //             },
 // Loop buttons, if color already exists, loop it once
+// Go get the first product, set it as color, get its size - since the prodict colros and sizes and unknown
+// Maybe set sizes and map them to a new array map
 
 
 function SingleProduct({
@@ -1914,6 +1916,24 @@ function SingleProduct({
     0: selectedSize,
     1: setSelectedSize
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
+  const {
+    0: selectedProduct,
+    1: setSelectedProduct
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+
+  function setInitialValues() {
+    if (!selectedColor) {
+      setSelectedColor(product.variations[0].attributes.attribute_pa_color);
+      let obj = [];
+      product.variations.map((object, index) => {
+        if (object.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
+          obj.push(object.attributes.attribute_pa_size);
+        }
+
+        setSizes(obj);
+      });
+    }
+  }
 
   function setUniqueColors() {
     let colorArr = [];
@@ -1926,12 +1946,25 @@ function SingleProduct({
     });
   }
 
+  function getProduct(color, size) {
+    product.variations.map((object, index) => {
+      if (!selectedSize) {
+        if (object.attributes.attribute_pa_color === selectedColor) {
+          setSelectedProduct(object);
+        }
+      } else {
+        if (object.attributes.attribute_pa_color === selectedColor && object.attributes.attribute_pa_size === selectedSize) {
+          setSelectedProduct(object);
+        }
+      }
+    });
+  }
+
+  console.log('Color, size', selectedColor, selectedSize);
+
   function getSizes() {
     let obj = [];
-    console.log("size", obj);
     product.variations.map((object, index) => {
-      console.log(object.attributes.attribute_pa_color === selectedColor);
-
       if (object.attributes.attribute_pa_color === selectedColor) {
         obj.push(object.attributes.attribute_pa_size);
       }
@@ -1940,61 +1973,68 @@ function SingleProduct({
     });
   }
 
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(() => {
-    setUniqueColors();
-  }, []);
-
-  function changeColor({
-    object,
-    index
-  }) {
-    // console.log("changcol", object, index)
-    setSelectedColor(object); // setProductIndex(index ? index : 0)
-
-    getSizes();
+  function changeColor(color) {
+    setSelectedColor(color);
   }
 
-  console.log("RERE", selectedColor, selectedSize);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    getSizes();
+    getProduct();
+  }, [selectedColor, selectedSize]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    setSelectedSize(null);
+  }, [selectedColor]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    setUniqueColors();
+    setInitialValues();
+  }, []);
   return __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 116,
+      lineNumber: 156,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 117,
+      lineNumber: 157,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 118,
+      lineNumber: 158,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 120,
+      lineNumber: 160,
       columnNumber: 17
     }
-  }, "Price: ", product.variations[productIndex].display_regular_price), __jsx("div", {
+  }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 123,
+      lineNumber: 161,
+      columnNumber: 17
+    }
+  }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
+    __self: this,
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 163,
       columnNumber: 17
     }
   }, colors.map((object, index) => __jsx("button", {
     onClick: () => changeColor(object),
     key: index,
     style: {
-      border: index === productIndex ? '3px solid red' : '',
+      border: selectedColor === object ? '3px solid red' : '',
       height: '50px',
       width: '50px',
       backgroundColor: `${object}`
@@ -2002,27 +2042,27 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 126,
+      lineNumber: 166,
       columnNumber: 29
     }
   })), sizes.map((object, index) => __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 132,
+      lineNumber: 172,
       columnNumber: 29
     }
-  }, console.log("Sd", object), __jsx("div", {
+  }, __jsx("div", {
     onClick: () => setSelectedSize(object),
     style: {
       height: '50px',
       width: '50px',
-      border: '2px solid grey'
+      border: selectedSize === object ? '2px solid black' : "1px solid grey"
     },
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 134,
+      lineNumber: 173,
       columnNumber: 33
     }
   }, object)))), __jsx("button", {
@@ -2034,22 +2074,10 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 139,
+      lineNumber: 183,
       columnNumber: 17
     }
-  }, "Add to cart")), product.variations[productIndex].variation_gallery_images.map((product, index) => {
-    return __jsx("img", {
-      src: product.url,
-      height: "300px",
-      title: "Contemplative Reptile",
-      __self: this,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 144,
-        columnNumber: 28
-      }
-    });
-  }));
+  }, "Add to cart")), console.log("sss", selectedProduct.variation_gallery_images));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
@@ -2094,7 +2122,7 @@ const WooCommerce = new _woocommerce_woocommerce_rest_api__WEBPACK_IMPORTED_MODU
 
 /***/ }),
 
-/***/ 5:
+/***/ 3:
 /*!*******************************************************!*\
   !*** multi ./src/pages/[product]/[single-product].js ***!
   \*******************************************************/
