@@ -926,6 +926,9 @@ class MyDocument extends next_document__WEBPACK_IMPORTED_MODULE_1___default.a {
         columnNumber: 21
       }
     })), __jsx("body", {
+      style: {
+        margin: 0
+      },
       __self: this,
       __source: {
         fileName: _jsxFileName,
