@@ -51,10 +51,7 @@ function SingleProduct({ product }) {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null)
 
-    // const [selectedProduct, setSelectedProduct] = useState(  getProduct())
-
     const sizes = useMemo(() => getAllProductSizes(product, selectedColor), [product, selectedColor])
-
     const selectedProduct = getProduct(product, selectedColor, selectedSize)
 
     function setInitialValues() {
@@ -70,63 +67,45 @@ function SingleProduct({ product }) {
                 colorSet.add(variation.attributes.attribute_pa_color);
             }
         }
+
         setColors(Array.from(colorSet));
+
     }
 
-    // function getProduct(color, size) {
-    //     for (const variation of product.variations) {
-    //         if (!selectedSize) {
-    //             if (variation.attributes.attribute_pa_color === selectedColor) {
-    //                 setSelectedProduct(variation)
-    //             }
-    //         } else {
-    //             if (variation.attributes.attribute_pa_color === selectedColor &&
-    //                 variation.attributes.attribute_pa_size === selectedSize) {
-    //                 setSelectedProduct(variation)
-    //             }
-    //         }
-    //     }
-    // }
-
-    console.log('Color, size', selectedProduct)
-
-    useEffect(() => {
+    function onChangeColor(color) {
         setSelectedSize(null)
-    }, [selectedColor])
-
-    useEffect(() => {
-
-    }, [selectedColor, selectedSize])
+        setSelectedColor(color)
+    }
 
     useEffect(() => {
         setUniqueColors()
         setInitialValues()
     }, [])
 
+    if (!selectedProduct) return " loading";
     return (
         <div>
             <div>
                 <div>Name: {product.name}</div>
 
-                <div>Price: {selectedProduct ? selectedProduct.display_regular_price : ""}</div>
-                <div>Sale Price: {selectedProduct ? selectedProduct.display_price : ""}</div>
+                <div>Price: {selectedProduct.display_regular_price}</div>
+                <div>Sale Price: {selectedProduct.display_price}</div>
 
                 <div>
                     {
                         colors.map((color, index) =>
-                            <button onClick={() => setSelectedColor(color)} key={index} style={{ border: selectedColor === color ? '3px solid red' : '', height: '50px', width: '50px', backgroundColor: `${color}` }}></button>
+                            <button onClick={() => onChangeColor(color)} key={index} style={{ border: selectedColor === color ? '3px solid red' : '', height: '50px', width: '50px', backgroundColor: `${color}` }}></button>
                         )
                     }
 
                     {
                         sizes.map((size, index) =>
-                            <div>
-                                <div
-                                    onClick={() => setSelectedSize(size)}
-                                    style={{ height: '50px', width: '50px', border: selectedSize === size ? '2px solid black' : "1px solid grey" }}
-                                >
-                                    {size}
-                                </div>
+                            <div
+                                key={index}
+                                onClick={() => setSelectedSize(size)}
+                                style={{ height: '50px', width: '50px', border: selectedSize === size ? '2px solid black' : "1px solid grey" }}
+                            >
+                                {size}
                             </div>
                         )
                     }
@@ -134,13 +113,14 @@ function SingleProduct({ product }) {
                 <button style={{ margin: "20px 0", padding: '14px 14px', fontSize: '1em' }}>Add to cart</button>
             </div>
             {
-                selectedProduct ? selectedProduct.variation_gallery_images.map((product, index) => {
+                selectedProduct.variation_gallery_images.map((product, index) => {
                     return <img
+                        key={index}
                         src={product.url}
                         height="300px"
                         title="Contemplative Reptile"
                     />
-                }) : "n"
+                })
             }
 
         </div>

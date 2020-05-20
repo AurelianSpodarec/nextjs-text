@@ -34785,8 +34785,7 @@ function SingleProduct(_ref) {
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       selectedSize = _useState3[0],
-      setSelectedSize = _useState3[1]; // const [selectedProduct, setSelectedProduct] = useState(  getProduct())
-
+      setSelectedSize = _useState3[1];
 
   var sizes = Object(react__WEBPACK_IMPORTED_MODULE_1__["useMemo"])(function () {
     return getAllProductSizes(product, selectedColor);
@@ -34820,77 +34819,64 @@ function SingleProduct(_ref) {
     }
 
     setColors(Array.from(colorSet));
-  } // function getProduct(color, size) {
-  //     for (const variation of product.variations) {
-  //         if (!selectedSize) {
-  //             if (variation.attributes.attribute_pa_color === selectedColor) {
-  //                 setSelectedProduct(variation)
-  //             }
-  //         } else {
-  //             if (variation.attributes.attribute_pa_color === selectedColor &&
-  //                 variation.attributes.attribute_pa_size === selectedSize) {
-  //                 setSelectedProduct(variation)
-  //             }
-  //         }
-  //     }
-  // }
+  }
 
-
-  console.log('Color, size', selectedProduct);
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+  function onChangeColor(color) {
     setSelectedSize(null);
-  }, [selectedColor]);
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {}, [selectedColor, selectedSize]);
+    setSelectedColor(color);
+  }
+
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setUniqueColors();
     setInitialValues();
   }, []);
+  if (!selectedProduct) return " loading";
   return __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 107,
+      lineNumber: 87,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 108,
+      lineNumber: 88,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 109,
+      lineNumber: 89,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 111,
+      lineNumber: 91,
       columnNumber: 17
     }
-  }, "Price: ", selectedProduct ? selectedProduct.display_regular_price : ""), __jsx("div", {
+  }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 112,
+      lineNumber: 92,
       columnNumber: 17
     }
-  }, "Sale Price: ", selectedProduct ? selectedProduct.display_price : ""), __jsx("div", {
+  }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 114,
+      lineNumber: 94,
       columnNumber: 17
     }
   }, colors.map(function (color, index) {
     return __jsx("button", {
       onClick: function onClick() {
-        return setSelectedColor(color);
+        return onChangeColor(color);
       },
       key: index,
       style: {
@@ -34902,19 +34888,13 @@ function SingleProduct(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 117,
+        lineNumber: 97,
         columnNumber: 29
       }
     });
   }), sizes.map(function (size, index) {
     return __jsx("div", {
-      __self: _this,
-      __source: {
-        fileName: _jsxFileName,
-        lineNumber: 123,
-        columnNumber: 29
-      }
-    }, __jsx("div", {
+      key: index,
       onClick: function onClick() {
         return setSelectedSize(size);
       },
@@ -34926,10 +34906,10 @@ function SingleProduct(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 124,
-        columnNumber: 33
+        lineNumber: 103,
+        columnNumber: 29
       }
-    }, size));
+    }, size);
   })), __jsx("button", {
     style: {
       margin: "20px 0",
@@ -34939,22 +34919,23 @@ function SingleProduct(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 134,
+      lineNumber: 113,
       columnNumber: 17
     }
-  }, "Add to cart")), selectedProduct ? selectedProduct.variation_gallery_images.map(function (product, index) {
+  }, "Add to cart")), selectedProduct.variation_gallery_images.map(function (product, index) {
     return __jsx("img", {
+      key: index,
       src: product.url,
       height: "300px",
       title: "Contemplative Reptile",
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 138,
+        lineNumber: 117,
         columnNumber: 28
       }
     });
-  }) : "n");
+  }));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
