@@ -1849,6 +1849,24 @@ function getAllProductSizes(product, selectedColor) {
   return allColorSizes;
 }
 
+function getProduct(products, color, size) {
+  let product;
+
+  for (const variation of products.variations) {
+    if (!size) {
+      if (variation.attributes.attribute_pa_color === color) {
+        product = variation;
+      }
+    } else {
+      if (variation.attributes.attribute_pa_color === color && variation.attributes.attribute_pa_size === size) {
+        product = variation;
+      }
+    }
+  }
+
+  return product;
+}
+
 function SingleProduct({
   product
 }) {
@@ -1865,12 +1883,10 @@ function SingleProduct({
   const {
     0: selectedSize,
     1: setSelectedSize
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null);
-  const {
-    0: selectedProduct,
-    1: setSelectedProduct
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(null); // const [selectedProduct, setSelectedProduct] = useState(  getProduct())
+
   const sizes = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(() => getAllProductSizes(product, selectedColor), [product, selectedColor]);
+  const selectedProduct = getProduct(product, selectedColor, selectedSize);
 
   function setInitialValues() {
     if (!selectedColor) {
@@ -1888,29 +1904,27 @@ function SingleProduct({
     }
 
     setColors(Array.from(colorSet));
-  }
+  } // function getProduct(color, size) {
+  //     for (const variation of product.variations) {
+  //         if (!selectedSize) {
+  //             if (variation.attributes.attribute_pa_color === selectedColor) {
+  //                 setSelectedProduct(variation)
+  //             }
+  //         } else {
+  //             if (variation.attributes.attribute_pa_color === selectedColor &&
+  //                 variation.attributes.attribute_pa_size === selectedSize) {
+  //                 setSelectedProduct(variation)
+  //             }
+  //         }
+  //     }
+  // }
 
-  function getProduct(color, size) {
-    for (const variation of product.variations) {
-      if (!selectedSize) {
-        if (variation.attributes.attribute_pa_color === selectedColor) {
-          setSelectedProduct(variation);
-        }
-      } else {
-        if (variation.attributes.attribute_pa_color === selectedColor && variation.attributes.attribute_pa_size === selectedSize) {
-          setSelectedProduct(variation);
-        }
-      }
-    }
-  }
 
-  console.log('Color, size', selectedColor, selectedSize);
+  console.log('Color, size', selectedProduct);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setSelectedSize(null);
   }, [selectedColor]);
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    getProduct();
-  }, [selectedColor, selectedSize]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {}, [selectedColor, selectedSize]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setUniqueColors();
     setInitialValues();
@@ -1919,42 +1933,42 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 86,
+      lineNumber: 107,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 87,
+      lineNumber: 108,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 88,
+      lineNumber: 109,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 90,
+      lineNumber: 111,
       columnNumber: 17
     }
-  }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
+  }, "Price: ", selectedProduct ? selectedProduct.display_regular_price : ""), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 91,
+      lineNumber: 112,
       columnNumber: 17
     }
-  }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
+  }, "Sale Price: ", selectedProduct ? selectedProduct.display_price : ""), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 93,
+      lineNumber: 114,
       columnNumber: 17
     }
   }, colors.map((color, index) => __jsx("button", {
@@ -1969,14 +1983,14 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 96,
+      lineNumber: 117,
       columnNumber: 29
     }
   })), sizes.map((size, index) => __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 102,
+      lineNumber: 123,
       columnNumber: 29
     }
   }, __jsx("div", {
@@ -1989,7 +2003,7 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 103,
+      lineNumber: 124,
       columnNumber: 33
     }
   }, size)))), __jsx("button", {
@@ -2001,10 +2015,22 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 113,
+      lineNumber: 134,
       columnNumber: 17
     }
-  }, "Add to cart")), console.log("sss", sizes));
+  }, "Add to cart")), selectedProduct ? selectedProduct.variation_gallery_images.map((product, index) => {
+    return __jsx("img", {
+      src: product.url,
+      height: "300px",
+      title: "Contemplative Reptile",
+      __self: this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 138,
+        columnNumber: 28
+      }
+    });
+  }) : "n");
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
@@ -2012,10 +2038,8 @@ function SingleProduct({
 SingleProduct.getInitialProps = async ctx => {
   const {
     query
-  } = ctx;
-  console.log("Query Single Product", _services_woocommerce_config_woocommerce__WEBPACK_IMPORTED_MODULE_6__["default"].get('route').then(res => ({
-    p: res.data
-  }))); // return WooCommerce.get(`product/slug=${ctx.query['single-product']}`)
+  } = ctx; // console.log("Query Single Product", WooCommerce.get('route').then(res => ({ p: res.data })))
+  // return WooCommerce.get(`product/slug=${ctx.query['single-product']}`)
 
   return _services_woocommerce_config_woocommerce__WEBPACK_IMPORTED_MODULE_6__["default"].get(`product/slug=${ctx.query['single-product']}/variations`) // return WooCommerce.get(`products/${ctx.query['single-product']}`)
   .then(response => ({

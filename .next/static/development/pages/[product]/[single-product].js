@@ -34739,6 +34739,35 @@ function getAllProductSizes(product, selectedColor) {
   return allColorSizes;
 }
 
+function getProduct(products, color, size) {
+  var product;
+
+  var _iterator2 = _createForOfIteratorHelper(products.variations),
+      _step2;
+
+  try {
+    for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+      var variation = _step2.value;
+
+      if (!size) {
+        if (variation.attributes.attribute_pa_color === color) {
+          product = variation;
+        }
+      } else {
+        if (variation.attributes.attribute_pa_color === color && variation.attributes.attribute_pa_size === size) {
+          product = variation;
+        }
+      }
+    }
+  } catch (err) {
+    _iterator2.e(err);
+  } finally {
+    _iterator2.f();
+  }
+
+  return product;
+}
+
 function SingleProduct(_ref) {
   var _this = this;
 
@@ -34756,15 +34785,13 @@ function SingleProduct(_ref) {
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       selectedSize = _useState3[0],
-      setSelectedSize = _useState3[1];
+      setSelectedSize = _useState3[1]; // const [selectedProduct, setSelectedProduct] = useState(  getProduct())
 
-  var _useState4 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
-      selectedProduct = _useState4[0],
-      setSelectedProduct = _useState4[1];
 
   var sizes = Object(react__WEBPACK_IMPORTED_MODULE_1__["useMemo"])(function () {
     return getAllProductSizes(product, selectedColor);
   }, [product, selectedColor]);
+  var selectedProduct = getProduct(product, selectedColor, selectedSize);
 
   function setInitialValues() {
     if (!selectedColor) {
@@ -34775,27 +34802,6 @@ function SingleProduct(_ref) {
   function setUniqueColors() {
     var colorSet = new Set([]);
 
-    var _iterator2 = _createForOfIteratorHelper(product.variations),
-        _step2;
-
-    try {
-      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-        var variation = _step2.value;
-
-        if (variation.attributes.attribute_pa_color) {
-          colorSet.add(variation.attributes.attribute_pa_color);
-        }
-      }
-    } catch (err) {
-      _iterator2.e(err);
-    } finally {
-      _iterator2.f();
-    }
-
-    setColors(Array.from(colorSet));
-  }
-
-  function getProduct(color, size) {
     var _iterator3 = _createForOfIteratorHelper(product.variations),
         _step3;
 
@@ -34803,14 +34809,8 @@ function SingleProduct(_ref) {
       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var variation = _step3.value;
 
-        if (!selectedSize) {
-          if (variation.attributes.attribute_pa_color === selectedColor) {
-            setSelectedProduct(variation);
-          }
-        } else {
-          if (variation.attributes.attribute_pa_color === selectedColor && variation.attributes.attribute_pa_size === selectedSize) {
-            setSelectedProduct(variation);
-          }
+        if (variation.attributes.attribute_pa_color) {
+          colorSet.add(variation.attributes.attribute_pa_color);
         }
       }
     } catch (err) {
@@ -34818,15 +34818,29 @@ function SingleProduct(_ref) {
     } finally {
       _iterator3.f();
     }
-  }
 
-  console.log('Color, size', selectedColor, selectedSize);
+    setColors(Array.from(colorSet));
+  } // function getProduct(color, size) {
+  //     for (const variation of product.variations) {
+  //         if (!selectedSize) {
+  //             if (variation.attributes.attribute_pa_color === selectedColor) {
+  //                 setSelectedProduct(variation)
+  //             }
+  //         } else {
+  //             if (variation.attributes.attribute_pa_color === selectedColor &&
+  //                 variation.attributes.attribute_pa_size === selectedSize) {
+  //                 setSelectedProduct(variation)
+  //             }
+  //         }
+  //     }
+  // }
+
+
+  console.log('Color, size', selectedProduct);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setSelectedSize(null);
   }, [selectedColor]);
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    getProduct();
-  }, [selectedColor, selectedSize]);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {}, [selectedColor, selectedSize]);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setUniqueColors();
     setInitialValues();
@@ -34835,42 +34849,42 @@ function SingleProduct(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 86,
+      lineNumber: 107,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 87,
+      lineNumber: 108,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 88,
+      lineNumber: 109,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 90,
+      lineNumber: 111,
       columnNumber: 17
     }
-  }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
+  }, "Price: ", selectedProduct ? selectedProduct.display_regular_price : ""), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 91,
+      lineNumber: 112,
       columnNumber: 17
     }
-  }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
+  }, "Sale Price: ", selectedProduct ? selectedProduct.display_price : ""), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 93,
+      lineNumber: 114,
       columnNumber: 17
     }
   }, colors.map(function (color, index) {
@@ -34888,7 +34902,7 @@ function SingleProduct(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 96,
+        lineNumber: 117,
         columnNumber: 29
       }
     });
@@ -34897,7 +34911,7 @@ function SingleProduct(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 102,
+        lineNumber: 123,
         columnNumber: 29
       }
     }, __jsx("div", {
@@ -34912,7 +34926,7 @@ function SingleProduct(_ref) {
       __self: _this,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 103,
+        lineNumber: 124,
         columnNumber: 33
       }
     }, size));
@@ -34925,10 +34939,22 @@ function SingleProduct(_ref) {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 113,
+      lineNumber: 134,
       columnNumber: 17
     }
-  }, "Add to cart")), console.log("sss", sizes));
+  }, "Add to cart")), selectedProduct ? selectedProduct.variation_gallery_images.map(function (product, index) {
+    return __jsx("img", {
+      src: product.url,
+      height: "300px",
+      title: "Contemplative Reptile",
+      __self: _this,
+      __source: {
+        fileName: _jsxFileName,
+        lineNumber: 138,
+        columnNumber: 28
+      }
+    });
+  }) : "n");
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
@@ -34939,12 +34965,8 @@ SingleProduct.getInitialProps = function _callee(ctx) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          query = ctx.query;
-          console.log("Query Single Product", _services_woocommerce_config_woocommerce__WEBPACK_IMPORTED_MODULE_7__["default"].get('route').then(function (res) {
-            return {
-              p: res.data
-            };
-          })); // return WooCommerce.get(`product/slug=${ctx.query['single-product']}`)
+          query = ctx.query; // console.log("Query Single Product", WooCommerce.get('route').then(res => ({ p: res.data })))
+          // return WooCommerce.get(`product/slug=${ctx.query['single-product']}`)
 
           return _context.abrupt("return", _services_woocommerce_config_woocommerce__WEBPACK_IMPORTED_MODULE_7__["default"].get("product/slug=".concat(ctx.query['single-product'], "/variations")) // return WooCommerce.get(`products/${ctx.query['single-product']}`)
           .then(function (response) {
@@ -34957,7 +34979,7 @@ SingleProduct.getInitialProps = function _callee(ctx) {
             };
           }));
 
-        case 3:
+        case 2:
         case "end":
           return _context.stop();
       }

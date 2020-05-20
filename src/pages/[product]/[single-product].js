@@ -21,6 +21,25 @@ function getAllProductSizes(product, selectedColor) {
     return allColorSizes;
 }
 
+function getProduct(products, color, size) {
+    let product;
+
+    for (const variation of products.variations) {
+        if (!size) {
+            if (variation.attributes.attribute_pa_color === color) {
+                product = variation;
+            }
+        } else {
+            if (variation.attributes.attribute_pa_color === color &&
+                variation.attributes.attribute_pa_size === size) {
+                product = variation;
+            }
+        }
+    }
+
+    return product;
+}
+
 
 function SingleProduct({ product }) {
     const router = useRouter();
@@ -32,9 +51,11 @@ function SingleProduct({ product }) {
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null)
 
-    const [selectedProduct, setSelectedProduct] = useState({})
+    // const [selectedProduct, setSelectedProduct] = useState(  getProduct())
 
     const sizes = useMemo(() => getAllProductSizes(product, selectedColor), [product, selectedColor])
+
+    const selectedProduct = getProduct(product, selectedColor, selectedSize)
 
     function setInitialValues() {
         if (!selectedColor) {
@@ -52,29 +73,29 @@ function SingleProduct({ product }) {
         setColors(Array.from(colorSet));
     }
 
-    function getProduct(color, size) {
-        for (const variation of product.variations) {
-            if (!selectedSize) {
-                if (variation.attributes.attribute_pa_color === selectedColor) {
-                    setSelectedProduct(variation)
-                }
-            } else {
-                if (variation.attributes.attribute_pa_color === selectedColor &&
-                    variation.attributes.attribute_pa_size === selectedSize) {
-                    setSelectedProduct(variation)
-                }
-            }
-        }
-    }
+    // function getProduct(color, size) {
+    //     for (const variation of product.variations) {
+    //         if (!selectedSize) {
+    //             if (variation.attributes.attribute_pa_color === selectedColor) {
+    //                 setSelectedProduct(variation)
+    //             }
+    //         } else {
+    //             if (variation.attributes.attribute_pa_color === selectedColor &&
+    //                 variation.attributes.attribute_pa_size === selectedSize) {
+    //                 setSelectedProduct(variation)
+    //             }
+    //         }
+    //     }
+    // }
 
-    console.log('Color, size', selectedColor, selectedSize)
+    console.log('Color, size', selectedProduct)
 
     useEffect(() => {
         setSelectedSize(null)
     }, [selectedColor])
 
     useEffect(() => {
-        getProduct()
+
     }, [selectedColor, selectedSize])
 
     useEffect(() => {
@@ -87,8 +108,8 @@ function SingleProduct({ product }) {
             <div>
                 <div>Name: {product.name}</div>
 
-                <div>Price: {selectedProduct.display_regular_price}</div>
-                <div>Sale Price: {selectedProduct.display_price}</div>
+                <div>Price: {selectedProduct ? selectedProduct.display_regular_price : ""}</div>
+                <div>Sale Price: {selectedProduct ? selectedProduct.display_price : ""}</div>
 
                 <div>
                     {
@@ -112,17 +133,15 @@ function SingleProduct({ product }) {
                 </div>
                 <button style={{ margin: "20px 0", padding: '14px 14px', fontSize: '1em' }}>Add to cart</button>
             </div>
-            {console.log("sss", sizes)}
-            {/* {
-
-                selectedProduct == {} ? "null" : selectedProduct.variation_gallery_images.map((product, index) => {
+            {
+                selectedProduct ? selectedProduct.variation_gallery_images.map((product, index) => {
                     return <img
                         src={product.url}
                         height="300px"
                         title="Contemplative Reptile"
                     />
-                })
-            } */}
+                }) : "n"
+            }
 
         </div>
     )
@@ -134,7 +153,7 @@ export default SingleProduct;
 SingleProduct.getInitialProps = async (ctx) => {
 
     const { query } = ctx;
-    console.log("Query Single Product", WooCommerce.get('route').then(res => ({ p: res.data })))
+    // console.log("Query Single Product", WooCommerce.get('route').then(res => ({ p: res.data })))
     // return WooCommerce.get(`product/slug=${ctx.query['single-product']}`)
     return WooCommerce.get(`product/slug=${ctx.query['single-product']}/variations`)
         // return WooCommerce.get(`products/${ctx.query['single-product']}`)
