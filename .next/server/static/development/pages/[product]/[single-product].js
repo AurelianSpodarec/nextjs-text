@@ -1837,55 +1837,17 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
 
 
-function ChooseColor({
-  colors
-}) {
-  return colors.map((color, index) => __jsx("button", {
-    style: {
-      height: '50px',
-      width: '50px',
-      backgroundColor: `${color}`
-    },
-    __self: this,
-    __source: {
-      fileName: _jsxFileName,
-      lineNumber: 17,
-      columnNumber: 13
+function getAllProductSizes(product, selectedColor) {
+  let allColorSizes = [];
+
+  for (const variation of product.variations) {
+    if (variation.attributes.attribute_pa_color === selectedColor) {
+      allColorSizes.push(variation.attributes.attribute_pa_size);
     }
-  }));
+  }
+
+  return allColorSizes;
 }
-
-function getColors(variation) {
-  console.log("color", variation.variations);
-  return variation.variations.map((item, index) => {
-    return item.attributes.attribute_pa_color;
-  });
-} // function getProductById(products, id) {
-//     return products.find(product => product.variation_id === id);
-// }
-// Select the first one by index
-// Change it later by 'color' and 'size';
-// color and Size is unknown untill the item is loaded - need to show the first item at start
-// Need to select first item automatically.
-// If use changes the color, we need to get the color and change it by the size
-// variations": [
-//     priduct 1 - {
-//     "attributes": {
-//     "attribute_pa_color": "green",
-//     "attribute_pa_size": "m"
-//     },
-//     product 2 -"attributes": {
-//         "attribute_pa_color": "green",
-//         "attribute_pa_size": "l"
-//         },
-//     prodiuct 3 -"attributes": {
-//             "attribute_pa_color": "pink",
-//             "attribute_pa_size": "xl"
-//             },
-// Loop buttons, if color already exists, loop it once
-// Go get the first product, set it as color, get its size - since the prodict colros and sizes and unknown
-// Maybe set sizes and map them to a new array map
-
 
 function SingleProduct({
   product
@@ -1893,20 +1855,8 @@ function SingleProduct({
   const router = Object(next_router__WEBPACK_IMPORTED_MODULE_2__["useRouter"])();
   console.log("Product", product);
   const {
-    0: productIndex,
-    1: setProductIndex
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(0);
-  const {
-    0: productSize,
-    1: setProductSize
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('L');
-  const {
     0: colors,
     1: setColors
-  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
-  const {
-    0: sizes,
-    1: setSizes
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])([]);
   const {
     0: selectedColor,
@@ -1920,19 +1870,11 @@ function SingleProduct({
     0: selectedProduct,
     1: setSelectedProduct
   } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])({});
+  const sizes = Object(react__WEBPACK_IMPORTED_MODULE_0__["useMemo"])(() => getAllProductSizes(product, selectedColor), [product, selectedColor]);
 
   function setInitialValues() {
     if (!selectedColor) {
       setSelectedColor(product.variations[0].attributes.attribute_pa_color);
-      let obj = [];
-
-      for (const variation of product.variations) {
-        if (variation.attributes.attribute_pa_color === product.variations[0].attributes.attribute_pa_color) {
-          obj.push(variation.attributes.attribute_pa_size);
-        }
-
-        setSizes(obj);
-      }
     }
   }
 
@@ -1963,31 +1905,12 @@ function SingleProduct({
   }
 
   console.log('Color, size', selectedColor, selectedSize);
-
-  function getSizes() {
-    let obj = [];
-
-    for (const variation of product.variations) {
-      if (variation.attributes.attribute_pa_color === selectedColor) {
-        obj.push(variation.attributes.attribute_pa_size);
-      }
-    } // only need to call this once
-
-
-    setSizes(obj);
-  }
-
-  function changeColor(color) {
-    setSelectedColor(color);
-  }
-
-  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
-    getSizes();
-    getProduct();
-  }, [selectedColor, selectedSize]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setSelectedSize(null);
   }, [selectedColor]);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    getProduct();
+  }, [selectedColor, selectedSize]);
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
     setUniqueColors();
     setInitialValues();
@@ -1996,80 +1919,80 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 160,
+      lineNumber: 86,
       columnNumber: 9
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 161,
+      lineNumber: 87,
       columnNumber: 13
     }
   }, __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 162,
+      lineNumber: 88,
       columnNumber: 17
     }
   }, "Name: ", product.name), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 164,
+      lineNumber: 90,
       columnNumber: 17
     }
   }, "Price: ", selectedProduct.display_regular_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 165,
+      lineNumber: 91,
       columnNumber: 17
     }
   }, "Sale Price: ", selectedProduct.display_price), __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 167,
+      lineNumber: 93,
       columnNumber: 17
     }
-  }, colors.map((object, index) => __jsx("button", {
-    onClick: () => changeColor(object),
+  }, colors.map((color, index) => __jsx("button", {
+    onClick: () => setSelectedColor(color),
     key: index,
     style: {
-      border: selectedColor === object ? '3px solid red' : '',
+      border: selectedColor === color ? '3px solid red' : '',
       height: '50px',
       width: '50px',
-      backgroundColor: `${object}`
+      backgroundColor: `${color}`
     },
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 170,
+      lineNumber: 96,
       columnNumber: 29
     }
-  })), sizes.map((object, index) => __jsx("div", {
+  })), sizes.map((size, index) => __jsx("div", {
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 176,
+      lineNumber: 102,
       columnNumber: 29
     }
   }, __jsx("div", {
-    onClick: () => setSelectedSize(object),
+    onClick: () => setSelectedSize(size),
     style: {
       height: '50px',
       width: '50px',
-      border: selectedSize === object ? '2px solid black' : "1px solid grey"
+      border: selectedSize === size ? '2px solid black' : "1px solid grey"
     },
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 177,
+      lineNumber: 103,
       columnNumber: 33
     }
-  }, object)))), __jsx("button", {
+  }, size)))), __jsx("button", {
     style: {
       margin: "20px 0",
       padding: '14px 14px',
@@ -2078,10 +2001,10 @@ function SingleProduct({
     __self: this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 187,
+      lineNumber: 113,
       columnNumber: 17
     }
-  }, "Add to cart")), console.log("sss", selectedProduct.variation_gallery_images));
+  }, "Add to cart")), console.log("sss", sizes));
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (SingleProduct);
