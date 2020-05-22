@@ -13,7 +13,7 @@ const CartProvider = ({ children }) => {
 
 
     function addProduct(product) {
-        setCart([...initialState.cart, product])
+        setCart([...initialState.cart, product]);
     }
 
 
