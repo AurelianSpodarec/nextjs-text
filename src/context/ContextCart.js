@@ -25,9 +25,6 @@ const CartProvider = ({ children }) => {
         return cart.length;
     }
 
-    // Cart total price
-    // Cart length
-
     return (
         <CartContext.Provider value={{ cart }}>
             {children}

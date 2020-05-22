@@ -29048,9 +29048,7 @@ var CartProvider = function CartProvider(_ref) {
 
   function getTotalLength() {
     return cart.length;
-  } // Cart total price
-  // Cart length
-
+  }
 
   return __jsx(CartContext.Provider, {
     value: {
@@ -29059,7 +29057,7 @@ var CartProvider = function CartProvider(_ref) {
     __self: _this,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 32,
+      lineNumber: 29,
       columnNumber: 9
     }
   }, children);
