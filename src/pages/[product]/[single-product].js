@@ -89,7 +89,7 @@ function SingleProduct({ product }) {
                 <div>Name: {product.name}</div>
 
                 <div>Price: {selectedProduct.display_regular_price}</div>
-                <div>Sale Price: {selectedProduct.display_price}</div>
+                <div>Sale Price:d {selectedProduct.display_price}</div>
 
                 <div>
                     {
